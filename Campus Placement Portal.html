@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Placement Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/relativeTime.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Simple modal styles */
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+        .modal-content {
+            transition: transform 0.25s ease;
+        }
+        /* Simple notification toast */
+        #notification-toast {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        /* AI Prep Modal content formatting */
+        #ai-prep-company-info ul, #ai-prep-questions ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        #ai-prep-company-info h5, #ai-prep-questions h5 {
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <div id="app" class="min-h-full">
+
+        <div id="login-page" class="flex min-h-full flex-col justify-center items-center px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <svg class="mx-auto h-12 w-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-indigo-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.3-5.923a9.004 9.004 0 00-8.3-12.077A9.004 9.004 0 003.7 15.077A9.004 9.004 0 0012 21z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.1 14.612a7.48 7.48 0 00-3.033-3.033 7.48 7.48 0 00-3.033 3.033M4.9 14.612a7.48 7.48 0 013.033-3.033 7.48 7.48 0 013.033 3.033" />
+                </svg>
+                <h2 class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Central Placement Portal</h2>
+                <p class="mt-2 text-center text-sm text-gray-600">Sign in to your account</p>
+            </div>
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                        <div class="mt-2">
+                            <input id="login-email" name="email" type="email" autocomplete="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="jane@college.edu">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                        <div class="mt-2">
+                            <input id="login-password" name="password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" value="jane">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Sign in
+                    </button>
+                </form>
+                <p class="mt-10 text-center text-sm text-gray-500">
+                    Don't have an account?
+                    <a href="#" id="goto-signup" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign up</a>
+                </p>
+            </div>
+        </div>
+
+        <div id="signup-page" class="hidden flex min-h-full flex-col justify-center items-center px-6 py-12 lg:px-8">
+            <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+                <svg class="mx-auto h-12 w-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-indigo-600">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.3-5.923a9.004 9.004 0 00-8.3-12.077A9.004 9.004 0 003.7 15.077A9.004 9.004 0 0012 21z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.1 14.612a7.48 7.48 0 00-3.033-3.033 7.48 7.48 0 00-3.033 3.033M4.9 14.612a7.48 7.48 0 013.033-3.033 7.48 7.48 0 013.033 3.033" />
+                </svg>
+                <h2 class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Create your account</h2>
+            </div>
+
+            <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <form id="signup-form" class="space-y-6">
+                    <div>
+                        <label for="signup-name" class="block text-sm font-medium leading-6 text-gray-900">Full Name</label>
+                        <div class="mt-2">
+                            <input id="signup-name" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="signup-email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+                        <div class="mt-2">
+                            <input id="signup-email" type="email" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="signup-password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                        <div class="mt-2">
+                            <input id="signup-password" type="password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="signup-role" class="block text-sm font-medium leading-6 text-gray-900">I am a...</label>
+                        <div class="mt-2">
+                            <select id="signup-role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                <option value="student">Student</option>
+                                <option value="admin">Admin (TPO)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="student-fields" class="space-y-6">
+                         <div>
+                            <label for="signup-branch" class="block text-sm font-medium leading-6 text-gray-900">Branch</label>
+                            <div class="mt-2">
+                                <input id="signup-branch" type="text" placeholder="CSE" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            </div>
+                        </div>
+                         <div>
+                            <label for="signup-cgpa" class="block text-sm font-medium leading-6 text-gray-900">Current CGPA</label>
+                            <div class="mt-2">
+                                <input id="signup-cgpa" type="number" step="0.1" placeholder="8.5" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        Create Account
+                    </button>
+                </form>
+                <p class="mt-10 text-center text-sm text-gray-500">
+                    Already have an account?
+                    <a href="#" id="goto-login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Sign in</a>
+                </p>
+            </div>
+        </div>
+
+
+        <div id="dashboard" class="hidden min-h-full">
+            <nav class="bg-indigo-600 shadow-md">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16 items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <svg class="h-8 w-8 text-indigo-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.3-5.923a9.004 9.004 0 00-8.3-12.077A9.004 9.004 0 003.7 15.077A9.004 9.004 0 0012 21z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a3 3 0 100-6 3 3 0 000 6z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.1 14.612a7.48 7.48 0 00-3.033-3.033 7.48 7.48 0 00-3.033 3.033M4.9 14.612a7.48 7.48 0 013.033-3.033 7.48 7.48 0 013.033 3.033" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h1 class="text-white font-bold text-xl">Placement Portal</h1>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="relative mr-4">
+                                <button id="notifications-btn" class="relative rounded-full bg-indigo-600 p-1 text-indigo-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600">
+                                    <span class="sr-only">View notifications</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                                    </svg>
+                                    <span id="notification-dot" class="absolute -top-1 -right-1 flex h-3 w-3">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                                    </span>
+                                </button>
+                                <div id="notifications-panel" class="hidden absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu">
+                                    <div class="py-1" id="notifications-list">
+                                        <p class="p-4 text-sm text-gray-500">No new notifications.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-indigo-200 text-sm font-medium mr-4" id="user-name-display"></span>
+                            <button id="logout-btn" class="rounded-md bg-indigo-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <header class="bg-white shadow-sm">
+                <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+                    <h1 class="text-2xl font-bold tracking-tight text-gray-900" id="dashboard-title">Dashboard</h1>
+                </div>
+            </header>
+
+            <main>
+                <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+                    
+                    <div id="admin-view" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                            <div class="rounded-lg bg-white p-5 shadow">
+                                <dt class="truncate text-sm font-medium text-gray-500">Total Companies</dt>
+                                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900" id="admin-stat-companies">0</dd>
+                            </div>
+                            <div class="rounded-lg bg-white p-5 shadow">
+                                <dt class="truncate text-sm font-medium text-gray-500">Active Job Openings</dt>
+                                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900" id="admin-stat-jobs">0</dd>
+                            </div>
+                            <div class="rounded-lg bg-white p-5 shadow">
+                                <dt class="truncate text-sm font-medium text-gray-500">Total Applications</dt>
+                                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900" id="admin-stat-apps">0</dd>
+                            </div>
+                            <div class="rounded-lg bg-white p-5 shadow">
+                                <dt class="truncate text-sm font-medium text-gray-500">Students Registered</dt>
+                                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900" id="admin-stat-students">0</dd>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 shadow rounded-lg">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="text-xl font-semibold text-gray-900">Manage Companies & Jobs</h2>
+                                <button id="add-company-btn" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                                    + Add New Company
+                                </button>
+                            </div>
+                            <div id="admin-company-list" class="space-y-4">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div id="student-view" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-2 space-y-6">
+                                <div class="bg-white p-6 shadow rounded-lg">
+                                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Available Job Openings</h2>
+                                    <div class="flex items-center space-x-4 mb-4">
+                                        <input type="text" id="student-search-bar" placeholder="Search by title, company..." class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                        <input type="checkbox" id="student-filter-eligible" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                        <label for="student-filter-eligible" class="text-sm font-medium text-gray-700">Show only eligible</label>
+                                    </div>
+                                    <div id="student-job-list" class="space-y-4">
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-1 space-y-6">
+                                <div class="bg-white p-6 shadow rounded-lg">
+                                    <h2 class="text-xl font-semibold text-gray-900 mb-4">My Applications</h2>
+                                    <div id="student-app-list" class="space-y-3">
+                                        <p class="text-sm text-gray-500">You haven't applied to any jobs yet.</p>
+                                    </div>
+                                </div>
+                                <div class="bg-white p-6 shadow rounded-lg">
+                                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Upcoming Events</h2>
+                                    <div id="student-timeline" class="space-y-4">
+                                        <p class="text-sm text-gray-500">No upcoming events.</p>
+                                    </div>
+                                </div>
+                                <div class="bg-white p-6 shadow rounded-lg">
+                                    <h2 class="text-xl font-semibold text-gray-900 mb-4">My Profile</h2>
+                                    <p class="text-sm text-gray-700"><span class="font-medium">Name:</span> <span id="student-profile-name"></span></p>
+                                    <p class="text-sm text-gray-700"><span class="font-medium">Email:</span> <span id="student-profile-email"></span></p>
+                                    <p class="text-sm text-gray-700"><span class="font-medium">Branch:</span> <span id="student-profile-branch"></span></p>
+                                    <p class="text-sm text-gray-700"><span class="font-medium">CGPA:</span> <span id="student-profile-cgpa"></span></p>
+                                    <button class="mt-4 w-full rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                                        Upload Resume
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="company-modal" class="modal fixed inset-0 z-10 hidden overflow-y-auto bg-gray-500 bg-opacity-75" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div classs="modal-content relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
+                <form id="company-form" class="p-6 space-y-4">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="company-modal-title">Add New Company</h3>
+                    <input type="hidden" id="company-form-id">
+                    <div>
+                        <label for="company-name" class="block text-sm font-medium text-gray-700">Company Name</label>
+                        <input type="text" id="company-name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    </div>
+                    <div>
+                        <label for="company-logo" class="block text-sm font-medium text-gray-700">Logo URL</label>
+                        <input type="text" id="company-logo" placeholder="https://placehold.co/40x40" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="company-modal-cancel" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Save Company</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="job-modal" class="modal fixed inset-0 z-10 hidden overflow-y-auto bg-gray-500 bg-opacity-75" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="modal-content relative w-full max-w-2xl transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
+                <form id="job-form" class="p-6 space-y-4">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="job-modal-title">Add New Job</h3>
+                    <input type="hidden" id="job-form-company-id">
+                    <input type="hidden" id="job-form-id">
+                    <div>
+                        <label for="job-title" class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <input type="text" id="job-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="job-package" class="block text-sm font-medium text-gray-700">Package (LPA)</label>
+                            <input type="number" step="0.1" id="job-package" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                        </div>
+                        <div>
+                            <label for="job-type" class="block text-sm font-medium text-gray-700">Job Type</label>
+                            <select id="job-type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option>Full-time</option>
+                                <option>Internship</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <label for="job-description" class="block text-sm font-medium text-gray-700">Description</label>
+                            <button type="button" id="generate-desc-btn" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">✨ Generate with AI</button>
+                        </div>
+                        <textarea id="job-description" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                    </div>
+                    <fieldset class="space-y-2">
+                        <legend class="text-sm font-medium text-gray-700">Eligibility Criteria</legend>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="job-min-cgpa" class="block text-sm font-medium text-gray-700">Min CGPA</label>
+                                <input type="number" step="0.1" id="job-min-cgpa" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div>
+                                <label for="job-branches" class="block text-sm font-medium text-gray-700">Allowed Branches (comma-sep)</label>
+                                <input type="text" id="job-branches" placeholder="CSE, ECE, ME" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="job-modal-cancel" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Save Job</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="event-modal" class="modal fixed inset-0 z-10 hidden overflow-y-auto bg-gray-500 bg-opacity-75" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="modal-content relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
+                <form id="event-form" class="p-6 space-y-4">
+                    <h3 class="text-lg font-medium leading-6 text-gray-900" id="event-modal-title">Add New Event</h3>
+                    <input type="hidden" id="event-form-job-id">
+                    <div>
+                        <label for="event-title" class="block text-sm font-medium text-gray-700">Event Title</label>
+                        <select id="event-title" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option>Online Assessment</option>
+                            <option>Technical Interview</option>
+                            <option>HR Interview</option>
+                            <option>Pre-placement Talk</option>
+                            <option>Application Deadline</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="event-date" class="block text-sm font-medium text-gray-700">Date & Time</label>
+                        <input type="datetime-local" id="event-date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                    </div>
+                    <div class="flex justify-end space-x-3 pt-4">
+                        <button type="button" id="event-modal-cancel" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Add Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-prep-modal" class="modal fixed inset-0 z-10 hidden overflow-y-auto bg-gray-500 bg-opacity-75" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="modal-content relative w-full max-w-3xl transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8">
+                <div class="p-6 space-y-4">
+                    <h3 class="text-xl font-medium leading-6 text-gray-900" id="ai-prep-title">AI Interview Prep</h3>
+                    
+                    <div class="mt-4">
+                        <h4 class="text-lg font-semibold text-gray-800">About <span id="ai-prep-company-name"></span></h4>
+                        <div id="ai-prep-company-info" class="mt-2 max-w-none rounded-md border border-gray-200 bg-gray-50 p-3 text-sm">
+                            <p class="text-gray-500">Loading company info...</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h4 class="text-lg font-semibold text-gray-800">Example Interview Questions</h4>
+                        <div id="ai-prep-questions" class="mt-2 max-w-none rounded-md border border-gray-200 p-3 text-sm">
+                            <p class="text-gray-500">Loading questions...</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-4">
+                        <button type="button" id="ai-prep-modal-close" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-modal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center bg-gray-900 bg-opacity-60" aria-modal="true">
+        <div class="flex flex-col items-center rounded-lg bg-white p-8 shadow-xl">
+            <svg class="h-12 w-12 animate-spin text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-4 text-lg font-medium text-gray-700">AI is thinking...</p>
+            <p class="text-sm text-gray-500">Please wait a moment.</p>
+        </div>
+    </div>
+
+    <div id="notification-toast" class="fixed top-5 right-5 w-80 transform translate-x-full opacity-0 rounded-md bg-green-500 p-4 text-white shadow-lg">
+        <p class="font-bold" id="notification-title">Success!</p>
+        <p class="text-sm" id="notification-message">Operation completed.</p>
+    </div>
+
+    <script>
+        dayjs.extend(dayjs_plugin_relativeTime);
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- STATE MANAGEMENT (Mock Database) ---
+            let state = {
+                currentUser: null, // { id: '...', type: 'admin', ... }
+                users: [
+                    {
+                        id: 'admin01',
+                        name: 'TPO Admin',
+                        email: 'admin@college.edu',
+                        password: 'admin',
+                        type: 'admin'
+                    },
+                    {
+                        id: 'student01',
+                        name: 'Jane Doe',
+                        email: 'jane@college.edu',
+                        password: 'jane',
+                        type: 'student',
+                        profile: {
+                            branch: 'CSE',
+                            cgpa: 8.8,
+                            resumeUrl: null
+                        }
+                    }
+                ],
+                companies: [
+                    { id: 'c1', name: 'TechCorp', logo: 'https://placehold.co/40x40/6366f1/ffffff?text=TC' },
+                    { id: 'c2', name: 'InnovateInc', logo: 'https://placehold.co/40x40/ec4899/ffffff?text=II' },
+                    { id: 'c3', name: 'DataSys', logo: 'https://placehold.co/40x40/22c55e/ffffff?text=DS' },
+                ],
+                jobs: [
+                    { 
+                        id: 'j1', 
+                        companyId: 'c1', 
+                        title: 'Software Engineer',
+                        packageLpa: 14,
+                        type: 'Full-time',
+                        description: 'Join our core engineering team to build next-gen products.',
+                        eligibility: { minCgpa: 8.0, branches: ['CSE', 'ECE'] }
+                    },
+                    { 
+                        id: 'j2', 
+                        companyId: 'c1', 
+                        title: 'Data Analyst Intern',
+                        packageLpa: 3.6, // (Stipend)
+                        type: 'Internship',
+                        description: 'Work with our data science team on real-world problems.',
+                        eligibility: { minCgpa: 7.5, branches: ['CSE', 'ECE', 'ME', 'EEE'] }
+                    },
+                    { 
+                        id: 'j3', 
+                        companyId: 'c2', 
+                        title: 'Frontend Developer',
+                        packageLpa: 12,
+                        type: 'Full-time',
+                        description: 'Craft beautiful and responsive user interfaces.',
+                        eligibility: { minCgpa: 7.0, branches: ['CSE'] }
+                    },
+                ],
+                events: [
+                    { id: 'e1', jobId: 'j1', title: 'Application Deadline', date: '2025-11-25T23:59:00' },
+                    { id: 'e2', jobId: 'j1', title: 'Online Assessment', date: '2025-11-28T10:00:00' },
+                    { id: 'e3', jobId: 'j3', title: 'Pre-placement Talk', date: '2025-11-22T17:00:00' },
+                    { id: 'e4', jobId: 'j3', title: 'Application Deadline', date: '2025-11-24T23:59:00' },
+                ],
+                applications: [
+                    { id: 'a1', studentId: 'student01', jobId: 'j1', status: 'Applied' },
+                    { id: 'a2', studentId: 'student01', jobId: 'j3', status: 'Shortlisted for OA' },
+                ],
+                notifications: [
+                    { id: 'n1', userId: 'student01', title: 'New Job Alert!', message: 'TechCorp posted a new job: Software Engineer.', read: false, time: '2025-11-16T14:00:00' },
+                    { id: 'n2', userId: 'student01', title: 'Status Update', message: 'Your application for Frontend Developer is now "Shortlisted for OA".', read: false, time: '2025-11-16T14:30:00' },
+                    { id: 'n3', userId: 'admin01', title: 'New Application', message: 'Jane Doe applied for Software Engineer.', read: true, time: '2025-11-16T14:05:00' },
+                ]
+            };
+
+            // --- UI Selectors ---
+            const loginPage = document.getElementById('login-page');
+            const signupPage = document.getElementById('signup-page');
+            const dashboard = document.getElementById('dashboard');
+            const adminView = document.getElementById('admin-view');
+            const studentView = document.getElementById('student-view');
+            const dashboardTitle = document.getElementById('dashboard-title');
+            const userNameDisplay = document.getElementById('user-name-display');
+
+            // --- Auth Selectors ---
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const gotoSignup = document.getElementById('goto-signup');
+            const gotoLogin = document.getElementById('goto-login');
+            const signupRole = document.getElementById('signup-role');
+            const studentFields = document.getElementById('student-fields');
+
+            // --- *** NEW *** AI & Modal Selectors ---
+            const loadingModal = document.getElementById('loading-modal');
+            const aiPrepModal = document.getElementById('ai-prep-modal');
+            
+            // --- *** NEW *** MOCK GEMINI API ---
+            // IN A REAL APP: This would be an async fetch() to your own backend server,
+            // which would then securely call the Gemini API with your API key.
+            // DO NOT put your Gemini API key directly in your JavaScript!
+            async function mockGeminiAPI(prompt, type) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        console.log(`Mock AI Request: ${type}\nPrompt:`, prompt);
+                        let response = "";
+                        if (type === 'jobDescription') {
+                            response = `We are seeking a highly motivated **${prompt.title}** to join our innovative team at **${prompt.company}**.
+                            
+**Responsibilities:**
+* Develop and maintain high-quality software solutions.
+* Collaborate with cross-functional teams to define and design new features.
+* Ensure the performance, quality, and responsiveness of applications.
+
+**Qualifications:**
+* Proven experience as a Software Engineer or similar role.
+* Strong understanding of computer science fundamentals.
+* Excellent problem-solving skills and attention to detail.`;
+                        } else if (type === 'companyInfo') {
+                            response = `<p><strong>${prompt.company}</strong> is a leading (mock) technology company known for its innovative products. (This is a mock summary from a Google Search).</p><p>They are currently focused on expanding their market share in cloud computing and artificial intelligence. Recent news highlights their new product launch, the "Innovate-o-Tron 9000".</p>`;
+                        } else if (type === 'interviewQuestions') {
+                            response = `
+    <p>Here are some common questions for a <strong>${prompt.title}</strong> role:</p>
+    <h5>Behavioral Questions:</h5>
+    <ul>
+        <li>Tell me about a time you faced a difficult technical challenge and how you overcame it.</li>
+        <li>Describe a project you are particularly proud of. What was your role?</li>
+        <li>How do you handle disagreements with a teammate?</li>
+    </ul>
+    <h5>Technical Questions:</h5>
+    <ul>
+        <li>What are the core principles of Object-Oriented Programming?</li>
+        <li>Can you explain the difference between an API and a Web Service?</li>
+        <li>(Mock) How would you design a system for a real-time placement portal?</li>
+    </ul>`;
+                        }
+                        resolve(response);
+                    }, 1500); // Simulate network delay
+                });
+            }
+
+            // --- *** NEW *** Loading Modal Controls ---
+            function showLoading() {
+                loadingModal.classList.remove('hidden');
+            }
+            function hideLoading() {
+                loadingModal.classList.add('hidden');
+            }
+            
+            // --- Page Navigation ---
+            function showPage(pageId) {
+                loginPage.classList.add('hidden');
+                signupPage.classList.add('hidden');
+                dashboard.classList.add('hidden');
+                adminView.classList.add('hidden');
+                studentView.classList.add('hidden');
+
+                if (pageId === 'login') {
+                    loginPage.classList.remove('hidden');
+                } else if (pageId === 'signup') {
+                    signupPage.classList.remove('hidden');
+                } else if (pageId === 'dashboard') {
+                    dashboard.classList.remove('hidden');
+                    if (state.currentUser.type === 'admin') {
+                        adminView.classList.remove('hidden');
+                        dashboardTitle.textContent = 'Admin Dashboard';
+                        userNameDisplay.textContent = state.currentUser.name;
+                        renderAdminView();
+                    } else {
+                        studentView.classList.remove('hidden');
+                        dashboardTitle.textContent = 'Student Dashboard';
+                        userNameDisplay.textContent = state.currentUser.name;
+                        renderStudentView();
+                    }
+                    renderNotifications();
+                }
+            }
+
+            // --- Render Functions ---
+
+            // ADMIN: Render Company List
+            function renderAdminView() {
+                const companyList = document.getElementById('admin-company-list');
+                companyList.innerHTML = '';
+                
+                state.companies.forEach(company => {
+                    const companyJobs = state.jobs.filter(j => j.companyId === company.id);
+                    const companyCard = document.createElement('div');
+                    companyCard.className = 'border border-gray-200 rounded-lg shadow-sm';
+                    companyCard.innerHTML = `
+                        <div class="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <img src="${company.logo || 'https://placehold.co/40x40'}" alt="${company.name}" class="h-10 w-10 rounded-full bg-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900">${company.name}</h3>
+                            </div>
+                            <div>
+                                <button data-id="${company.id}" class="edit-company-btn text-sm font-medium text-indigo-600 hover:text-indigo-500">Edit</button>
+                                <button data-id="${company.id}" class="add-job-btn ml-4 rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-indigo-100">+ Add Job</button>
+                            </div>
+                        </div>
+                        <div class="p-4 space-y-3" id="job-list-${company.id}">
+                        </div>
+                    `;
+                    companyList.appendChild(companyCard);
+
+                    const jobListDiv = companyCard.querySelector(`#job-list-${company.id}`);
+                    if (companyJobs.length === 0) {
+                        jobListDiv.innerHTML = '<p class="text-sm text-gray-500">No job postings from this company yet.</p>';
+                    } else {
+                        companyJobs.forEach(job => {
+                            const jobItem = document.createElement('div');
+                            jobItem.className = 'flex justify-between items-start p-3 rounded-md bg-white border';
+                            jobItem.innerHTML = `
+                                <div>
+                                    <p class="font-semibold text-gray-800">${job.title} (${job.type})</p>
+                                    <p class="text-sm text-gray-600">${job.packageLpa} LPA | Min CGPA: ${job.eligibility.minCgpa} | Branches: ${job.eligibility.branches.join(', ')}</p>
+                                </div>
+                                <div>
+                                    <button data-id="${job.id}" class="add-event-btn text-sm font-medium text-indigo-600 hover:text-indigo-500">Manage Events</button>
+                                    <button data-id="${job.id}" class="edit-job-btn ml-2 text-sm font-medium text-gray-600 hover:text-gray-500">Edit</button>
+                                </div>
+                            `;
+                            jobListDiv.appendChild(jobItem);
+                        });
+                    }
+                });
+                updateAdminStats();
+            }
+            
+            function updateAdminStats() {
+                document.getElementById('admin-stat-companies').textContent = state.companies.length;
+                document.getElementById('admin-stat-jobs').textContent = state.jobs.length;
+                document.getElementById('admin-stat-apps').textContent = state.applications.length;
+                document.getElementById('admin-stat-students').textContent = state.users.filter(u => u.type === 'student').length;
+            }
+
+            // STUDENT: Render Student View
+            function renderStudentView(searchTerm = '', showEligibleOnly = false) {
+                const student = state.currentUser;
+                
+                document.getElementById('student-profile-name').textContent = student.name;
+                document.getElementById('student-profile-email').textContent = student.email;
+                document.getElementById('student-profile-branch').textContent = student.profile.branch;
+                document.getElementById('student-profile-cgpa').textContent = student.profile.cgpa;
+                
+                const jobList = document.getElementById('student-job-list');
+                jobList.innerHTML = '';
+                
+                let filteredJobs = state.jobs;
+                
+                if (showEligibleOnly) {
+                    filteredJobs = filteredJobs.filter(job => 
+                        student.profile.cgpa >= job.eligibility.minCgpa &&
+                        job.eligibility.branches.includes(student.profile.branch)
+                    );
+                }
+                
+                if (searchTerm) {
+                    const lowerSearch = searchTerm.toLowerCase();
+                    filteredJobs = filteredJobs.filter(job => {
+                        const company = state.companies.find(c => c.id === job.companyId);
+                        return job.title.toLowerCase().includes(lowerSearch) || 
+                               company.name.toLowerCase().includes(lowerSearch);
+                    });
+                }
+                
+                if (filteredJobs.length === 0) {
+                    jobList.innerHTML = '<p class="text-sm text-gray-500">No job openings match your criteria.</p>';
+                }
+
+                filteredJobs.forEach(job => {
+                    const company = state.companies.find(c => c.id === job.companyId);
+                    const application = state.applications.find(a => a.studentId === student.id && a.jobId === job.id);
+                    const isEligible = student.profile.cgpa >= job.eligibility.minCgpa &&
+                                         job.eligibility.branches.includes(student.profile.branch);
+
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'border border-gray-200 rounded-lg shadow-sm overflow-hidden bg-white';
+                    jobCard.innerHTML = `
+                        <div class="p-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <img src="${company.logo || 'https://placehold.co/40x40'}" alt="${company.name}" class="h-10 w-10 rounded-full bg-gray-200">
+                                        <div>
+                                            <p class="text-lg font-semibold text-gray-900">${job.title}</p>
+                                            <p class="text-sm font-medium text-gray-600">${company.name}</p>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">${job.description}</p>
+                                </div>
+                                <div class="text-right flex-shrink-0 ml-4">
+                                    <p class="text-lg font-semibold text-indigo-600">${job.packageLpa} LPA</p>
+                                    <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">${job.type}</span>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500"><span class="font-medium">Min CGPA:</span> ${job.eligibility.minCgpa}</p>
+                                    <p class="text-xs text-gray-500"><span class="font-medium">Branches:</span> ${job.eligibility.branches.join(', ')}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button data-job-id="${job.id}" data-company-name="${company.name}" class="ai-prep-btn rounded-md bg-purple-100 px-3 py-1.5 text-sm font-semibold text-purple-700 shadow-sm hover:bg-purple-200">✨ AI Prep</button>
+                                    ${
+                                        application 
+                                        ? `<span class="rounded-md bg-green-100 px-3 py-1.5 text-sm font-semibold text-green-700">Applied (${application.status})</span>`
+                                        : (isEligible 
+                                            ? `<button data-id="${job.id}" class="apply-job-btn rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Apply Now</button>`
+                                            : `<span class="rounded-md bg-red-100 px-3 py-1.5 text-sm font-semibold text-red-700">Not Eligible</span>`)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    jobList.appendChild(jobCard);
+                });
+                
+                // Render Application List
+                const appList = document.getElementById('student-app-list');
+                const myApplications = state.applications.filter(a => a.studentId === student.id);
+                
+                if (myApplications.length === 0) {
+                     appList.innerHTML = '<p class="text-sm text-gray-500">You haven\'t applied to any jobs yet.</p>';
+                } else {
+                    appList.innerHTML = '';
+                    myApplications.forEach(app => {
+                        const job = state.jobs.find(j => j.id === app.jobId);
+                        const company = state.companies.find(c => c.id === job.companyId);
+                        const appItem = document.createElement('div');
+                        appItem.className = 'flex justify-between items-center';
+                        appItem.innerHTML = `
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">${job.title}</p>
+                                <p class="text-xs text-gray-500">${company.name}</p>
+                            </div>
+                            <span class="text-sm font-medium ${app.status === 'Applied' ? 'text-blue-600' : 'text-green-600'}">${app.status}</span>
+                        `;
+                        appList.appendChild(appItem);
+                    });
+                }
+                
+                // Render Timeline
+                const timeline = document.getElementById('student-timeline');
+                const myAppJobIds = myApplications.map(a => a.jobId);
+                const myEvents = state.events
+                    .filter(e => myAppJobIds.includes(e.jobId) || e.jobId === 'all')
+                    .filter(e => dayjs(e.date).isAfter(dayjs()))
+                    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+                if (myEvents.length === 0) {
+                    timeline.innerHTML = '<p class="text-sm text-gray-500">No upcoming events for your applications.</p>';
+                } else {
+                    timeline.innerHTML = '';
+                    myEvents.forEach(event => {
+                        const job = state.jobs.find(j => j.id === event.jobId);
+                        const company = state.companies.find(c => c.id === job.companyId);
+                        const eventItem = document.createElement('div');
+                        eventItem.className = 'pb-3 border-l-2 border-indigo-500 ml-2 pl-4 relative';
+                        eventItem.innerHTML = `
+                            <span class="absolute -left-[5px] top-1 h-2 w-2 rounded-full bg-indigo-600"></span>
+                            <p class="text-sm font-medium text-gray-800">${event.title}</p>
+                            <p class="text-xs text-gray-500">${company.name} - ${job.title}</p>
+                            <p class="text-xs font-semibold text-indigo-600">${dayjs(event.date).format('MMM D, h:mm A')} (${dayjs(event.date).fromNow()})</p>
+                        `;
+                        timeline.appendChild(eventItem);
+                    });
+                }
+            }
+            
+            // NOTIFICATIONS: Render panel
+            function renderNotifications() {
+                const list = document.getElementById('notifications-list');
+                const dot = document.getElementById('notification-dot');
+                
+                const myNotifications = state.notifications
+                    .filter(n => n.userId === state.currentUser.id)
+                    .sort((a, b) => new Date(b.time) - new Date(a.time));
+                    
+                const unreadCount = myNotifications.filter(n => !n.read).length;
+                
+                if (unreadCount > 0) {
+                    dot.classList.remove('hidden');
+                } else {
+                    dot.classList.add('hidden');
+                }
+                
+                if (myNotifications.length === 0) {
+                    list.innerHTML = '<p class="p-4 text-sm text-gray-500">No new notifications.</p>';
+                    return;
+                }
+                
+                list.innerHTML = '';
+                myNotifications.forEach(n => {
+                    const item = document.createElement('a');
+                    item.href = '#';
+                    item.className = `block px-4 py-2 text-sm ${n.read ? 'text-gray-500' : 'text-gray-700 font-medium'}`;
+                    item.innerHTML = `
+                        <p class="font-bold ${n.read ? 'text-gray-600' : 'text-gray-900'}">${n.title}</p>
+                        <p>${n.message}</p>
+                        <p class="text-xs text-indigo-500 mt-1">${dayjs(n.time).fromNow()}</p>
+                    `;
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        n.read = true; // Mark as read
+                        renderNotifications();
+                    });
+                    list.appendChild(item);
+                });
+            }
+            
+            // NOTIFICATIONS: Show global toast
+            function showNotification(title, message, type = 'success') {
+                const toast = document.getElementById('notification-toast');
+                document.getElementById('notification-title').textContent = title;
+                document.getElementById('notification-message').textContent = message;
+                
+                toast.classList.remove('bg-green-500', 'bg-red-500');
+                if (type === 'success') {
+                    toast.classList.add('bg-green-500');
+                } else {
+                    toast.classList.add('bg-red-500');
+                }
+                
+                toast.classList.remove('opacity-0', 'translate-x-full');
+                
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-x-full');
+                }, 3000);
+            }
+
+            // --- Event Handlers ---
+
+            // Login/Signup
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                const user = state.users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    state.currentUser = user;
+                    showPage('dashboard');
+                    loginForm.reset();
+                } else {
+                    showNotification('Login Failed', 'Invalid email or password.', 'error');
+                }
+            });
+
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+                const role = document.getElementById('signup-role').value;
+                
+                const existingUser = state.users.find(u => u.email === email);
+                if (existingUser) {
+                    showNotification('Signup Failed', 'An account with this email already exists.', 'error');
+                    return;
+                }
+                
+                const newUser = {
+                    id: 'u' + (state.users.length + 1),
+                    name,
+                    email,
+                    password,
+                    type: role
+                };
+                
+                if (role === 'student') {
+                    const branch = document.getElementById('signup-branch').value;
+                    const cgpa = parseFloat(document.getElementById('signup-cgpa').value);
+                    if (!branch || !cgpa) {
+                        showNotification('Signup Failed', 'Please provide branch and CGPA.', 'error');
+                        return;
+                    }
+                    newUser.profile = { branch: branch.toUpperCase(), cgpa, resumeUrl: null };
+                }
+                
+                state.users.push(newUser);
+                showNotification('Account Created!', 'Please log in with your new credentials.', 'success');
+                signupForm.reset();
+                showPage('login');
+            });
+            
+            signupRole.addEventListener('change', (e) => {
+                if (e.target.value === 'student') {
+                    studentFields.classList.remove('hidden');
+                } else {
+                    studentFields.classList.add('hidden');
+                }
+            });
+
+            gotoSignup.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('signup');
+            });
+             document.getElementById('goto-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('login');
+            });
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                state.currentUser = null;
+                showPage('login');
+            });
+
+            // Notifications Panel
+            const notifBtn = document.getElementById('notifications-btn');
+            const notifPanel = document.getElementById('notifications-panel');
+            notifBtn.addEventListener('click', () => {
+                notifPanel.classList.toggle('hidden');
+                if (state.currentUser) {
+                    state.notifications.forEach(n => {
+                        if (n.userId === state.currentUser.id) n.read = true;
+                    });
+                    renderNotifications();
+                }
+            });
+            
+            // Student: Search and Filter
+            document.getElementById('student-search-bar').addEventListener('input', (e) => {
+                const searchTerm = e.target.value;
+                const showEligible = document.getElementById('student-filter-eligible').checked;
+                renderStudentView(searchTerm, showEligible);
+            });
+            document.getElementById('student-filter-eligible').addEventListener('change', (e) => {
+                const showEligible = e.target.checked;
+                const searchTerm = document.getElementById('student-search-bar').value;
+                renderStudentView(searchTerm, showEligible);
+            });
+            
+            // Student: Apply to Job & *** NEW *** AI Prep
+            studentView.addEventListener('click', async (e) => {
+                const applyBtn = e.target.closest('.apply-job-btn');
+                const aiPrepBtn = e.target.closest('.ai-prep-btn');
+
+                if (applyBtn) {
+                    const jobId = applyBtn.dataset.id;
+                    const studentId = state.currentUser.id;
+                    
+                    const newApp = {
+                        id: 'a' + (state.applications.length + 1),
+                        studentId: studentId,
+                        jobId: jobId,
+                        status: 'Applied'
+                    };
+                    state.applications.push(newApp);
+                    
+                    const job = state.jobs.find(j => j.id === jobId);
+                    addNotification('admin01', 'New Application', `${state.currentUser.name} applied for ${job.title}.`);
+                    
+                    showNotification('Success!', `Applied to ${job.title}.`, 'success');
+                    renderStudentView();
+                }
+
+                // *** NEW *** AI Prep Logic
+                if (aiPrepBtn) {
+                    const jobId = aiPrepBtn.dataset.jobId;
+                    const companyName = aiPrepBtn.dataset.companyName;
+                    const job = state.jobs.find(j => j.id === jobId);
+                    
+                    // 1. Open the modal and set initial loading state
+                    document.getElementById('ai-prep-company-name').textContent = companyName;
+                    document.getElementById('ai-prep-title').textContent = `AI Prep for ${job.title}`;
+                    const companyInfoEl = document.getElementById('ai-prep-company-info');
+                    const questionsEl = document.getElementById('ai-prep-questions');
+                    
+                    companyInfoEl.innerHTML = '<p class="text-gray-500">Loading company info...</p>';
+                    questionsEl.innerHTML = '<p class="text-gray-500">Loading questions...</p>';
+                    
+                    aiPrepModal.classList.remove('hidden'); // Show the prep modal
+
+                    // 2. Show global loading modal
+                    showLoading();
+                    
+                    // 3. Make mock API calls in parallel
+                    const companyInfoPromise = mockGeminiAPI({ company: companyName }, 'companyInfo');
+                    const questionsPromise = mockGeminiAPI({ title: job.title }, 'interviewQuestions');
+                    
+                    const [companyInfo, questions] = await Promise.all([companyInfoPromise, questionsPromise]);
+                    
+                    // 4. Hide loading and populate results
+                    hideLoading();
+                    
+                    companyInfoEl.innerHTML = companyInfo;
+                    questionsEl.innerHTML = questions;
+                }
+            });
+
+            // *** NEW *** Close AI Prep Modal
+            document.getElementById('ai-prep-modal-close').addEventListener('click', () => {
+                aiPrepModal.classList.add('hidden');
+            });
+            
+            // *** NEW *** Admin: Generate AI Description
+            document.getElementById('generate-desc-btn').addEventListener('click', async () => {
+                const title = document.getElementById('job-title').value;
+                const companyId = document.getElementById('job-form-company-id').value;
+                
+                if (!title || !companyId) {
+                    showNotification('Missing Info', 'Please enter a Job Title and select a company first.', 'error');
+                    return;
+                }
+                
+                const company = state.companies.find(c => c.id === companyId);
+                const prompt = { title, company: company.name };
+                
+                showLoading();
+                const description = await mockGeminiAPI(prompt, 'jobDescription');
+                hideLoading();
+                
+                // Format the markdown-like text to simple text for textarea
+                const formattedDesc = description
+                    .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold
+                    .replace(/(\n\* )/g, '\n• ');     // Fix bullets
+                
+                document.getElementById('job-description').value = formattedDesc;
+                showNotification('Success', 'Job description generated!', 'success');
+            });
+
+
+            // Admin: Modals
+            const companyModal = document.getElementById('company-modal');
+            const jobModal = document.getElementById('job-modal');
+            const eventModal = document.getElementById('event-modal');
+            const companyForm = document.getElementById('company-form');
+            const jobForm = document.getElementById('job-form');
+            const eventForm = document.getElementById('event-form');
+            
+            const modals = {
+                company: { el: companyModal, form: companyForm, title: document.getElementById('company-modal-title') },
+                job: { el: jobModal, form: jobForm, title: document.getElementById('job-modal-title') },
+                event: { el: eventModal, form: eventForm, title: document.getElementById('event-modal-title') }
+            };
+            
+            function openModal(modalName, data = {}) {
+                const modal = modals[modalName];
+                if (!modal) return;
+                
+                modal.form.reset();
+                
+                if (modalName === 'company') {
+                    if (data.id) { // Edit
+                        modal.title.textContent = 'Edit Company';
+                        document.getElementById('company-form-id').value = data.id;
+                        document.getElementById('company-name').value = data.name;
+                        document.getElementById('company-logo').value = data.logo;
+                    } else { // Add
+                        modal.title.textContent = 'Add New Company';
+                        document.getElementById('company-form-id').value = '';
+                    }
+                } else if (modalName === 'job') {
+                    document.getElementById('job-form-company-id').value = data.companyId || '';
+                    if (data.id) { // Edit
+                        modal.title.textContent = 'Edit Job';
+                        document.getElementById('job-form-id').value = data.id;
+                        document.getElementById('job-title').value = data.title;
+                        document.getElementById('job-package').value = data.packageLpa;
+                        document.getElementById('job-type').value = data.type;
+                        document.getElementById('job-description').value = data.description;
+                        document.getElementById('job-min-cgpa').value = data.eligibility.minCgpa;
+                        document.getElementById('job-branches').value = data.eligibility.branches.join(', ');
+                    } else { // Add
+                        modal.title.textContent = 'Add New Job for ' + state.companies.find(c=>c.id === data.companyId).name;
+                        document.getElementById('job-form-id').value = '';
+                    }
+                } else if (modalName === 'event') {
+                    document.getElementById('event-form-job-id').value = data.jobId || '';
+                    const job = state.jobs.find(j => j.id === data.jobId);
+                    modal.title.textContent = `Add Event for ${job.title}`;
+                }
+                
+                modal.el.classList.remove('hidden');
+                modal.el.classList.add('opacity-100');
+            }
+            
+            function closeModal(modalName) {
+                const modal = modals[modalName];
+                if (modal) {
+                    modal.el.classList.add('hidden');
+                    modal.el.classList.remove('opacity-100');
+                }
+            }
+            
+            document.querySelectorAll('#company-modal-cancel, #job-modal-cancel, #event-modal-cancel').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeModal('company');
+                    closeModal('job');
+                    closeModal('event');
+                });
+            });
+
+            // Admin: Add/Edit Company
+            document.getElementById('add-company-btn').addEventListener('click', () => {
+                openModal('company', {});
+            });
+            
+            adminView.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-company-btn')) {
+                    const company = state.companies.find(c => c.id === e.target.dataset.id);
+                    openModal('company', company);
+                }
+                if (e.target.classList.contains('add-job-btn')) {
+                    openModal('job', { companyId: e.target.dataset.id });
+                }
+                if (e.target.classList.contains('edit-job-btn')) {
+                    const job = state.jobs.find(j => j.id === e.target.dataset.id);
+                    openModal('job', job);
+                }
+                if (e.target.classList.contains('add-event-btn')) {
+                    openModal('event', { jobId: e.target.dataset.id });
+                }
+            });
+
+            companyForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('company-form-id').value;
+                const companyData = {
+                    name: document.getElementById('company-name').value,
+                    logo: document.getElementById('company-logo').value
+                };
+                
+                if (id) {
+                    const index = state.companies.findIndex(c => c.id === id);
+                    state.companies[index] = { ...state.companies[index], ...companyData };
+                    showNotification('Company Updated', `${companyData.name} details were updated.`, 'success');
+                } else {
+                    companyData.id = 'c' + (state.companies.length + 1);
+                    state.companies.push(companyData);
+                    showNotification('Company Added', `${companyData.name} was added to the portal.`, 'success');
+                }
+                
+                closeModal('company');
+                renderAdminView();
+            });
+
+            // Admin: Add/Edit Job
+            jobForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const id = document.getElementById('job-form-id').value;
+                const companyId = document.getElementById('job-form-company-id').value;
+                
+                const jobData = {
+                    companyId: companyId,
+                    title: document.getElementById('job-title').value,
+                    packageLpa: parseFloat(document.getElementById('job-package').value),
+                    type: document.getElementById('job-type').value,
+                    description: document.getElementById('job-description').value,
+                    eligibility: {
+                        minCgpa: parseFloat(document.getElementById('job-min-cgpa').value),
+                        branches: document.getElementById('job-branches').value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean)
+                    }
+                };
+                
+                if (id) {
+                    const index = state.jobs.findIndex(j => j.id === id);
+                    state.jobs[index] = { ...state.jobs[index], ...jobData };
+                    showNotification('Job Updated', `${jobData.title} details were updated.`, 'success');
+                } else {
+                    jobData.id = 'j' + (state.jobs.length + 1);
+                    state.jobs.push(jobData);
+                    showNotification('Job Added', `New job ${jobData.title} was posted.`, 'success');
+
+                    Object.values(state.users).forEach(u => {
+                        if (u.type === 'student') {
+                             addNotification(u.id, 'New Job Alert!', `${state.companies.find(c=>c.id === companyId).name} posted a new job: ${jobData.title}.`);
+                        }
+                    });
+                }
+                
+                closeModal('job');
+                renderAdminView();
+            });
+            
+            // Admin: Add Event
+            eventForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const jobId = document.getElementById('event-form-job-id').value;
+                const eventData = {
+                    id: 'e' + (state.events.length + 1),
+                    jobId: jobId,
+                    title: document.getElementById('event-title').value,
+                    date: document.getElementById('event-date').value
+                };
+                
+                state.events.push(eventData);
+                
+                const job = state.jobs.find(j => j.id === jobId);
+                const company = state.companies.find(c => c.id === job.companyId);
+                const affectedApplications = state.applications.filter(a => a.jobId === jobId);
+                
+                affectedApplications.forEach(app => {
+                    addNotification(app.studentId, 'Event Scheduled', `A new event "${eventData.title}" for ${company.name} - ${job.title} is on ${dayjs(eventData.date).format('MMM D, h:mm A')}.`);
+                });
+                
+                showNotification('Event Added', `Event "${eventData.title}" was scheduled.`, 'success');
+                closeModal('event');
+                renderAdminView();
+            });
+            
+            function addNotification(userId, title, message) {
+                 state.notifications.push({
+                    id: 'n' + (state.notifications.length + 1),
+                    userId: userId,
+                    title: title,
+                    message: message,
+                    read: false,
+                    time: new Date().toISOString()
+                });
+
+                if(state.currentUser && state.currentUser.id === userId) {
+                    renderNotifications();
+                }
+            }
+
+            // --- Initial Load ---
+            showPage('login');
+        });
+    </script>
+</body>
+</html>
